@@ -24,8 +24,8 @@ data_logger.setLevel(DATA_LEVEL)
 
 # Обработчики
 console_handler = logging.StreamHandler()
-main_handler = TimedRotatingFileHandler('/var/log/weith_service.log', when='midnight', interval=1, backupCount=7)
-data_handler = TimedRotatingFileHandler('/var/log/weith_service_data.log', when='midnight', interval=1, backupCount=7)
+main_handler = TimedRotatingFileHandler('/home/scales/logs/weith_service.log', when='midnight', interval=1, backupCount=7)
+data_handler = TimedRotatingFileHandler('/home/scales/logs/weith_service_data.log', when='midnight', interval=1, backupCount=7)
 
 # Формат
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
