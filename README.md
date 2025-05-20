@@ -1,28 +1,33 @@
-# Scales Project
-
-В этом репозитории содержатся Python-скрипты и файлы сервисов для работы системы измерения веса и лазерных замеров.
-
-## Установка
-
-Создайте виртуальное окружение (опционально) и установите зависимости из файла `requirements.txt`:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-
-## Usage
-
-Two main scripts are provided:
-
-- `usr/sbin/wsh/api.py` &mdash; starts the Flask API server on port 5000.
-- `usr/sbin/wsh/weith.py` &mdash; reads weight and laser measurements.
-
-Example to run the API:
-
-```bash
-python3 usr/sbin/wsh/api.py
-```
-
-The `etc/systemd/system` folder contains example service files for running these scripts as systemd services.
+diff --git a//dev/null b/README.md
+index 0000000..82ae9da 100644
+--- a//dev/null
++++ b/README.md
+@@ -0,0 +1,28 @@
++# Scales Project
++
++This repository contains Python scripts and service files for running the weight and laser measurement system.
++
++## Installation
++
++Create a virtual environment (optional) and install dependencies from `requirements.txt`:
++
++```bash
++python3 -m venv venv
++source venv/bin/activate
++pip install -r requirements.txt
++```
++
++## Usage
++
++Two main scripts are provided:
++
++- `usr/sbin/wsh/api.py` &mdash; starts the Flask API server on port 5000.
++- `usr/sbin/wsh/weith.py` &mdash; reads weight and laser measurements.
++
++Example to run the API:
++
++```bash
++python3 usr/sbin/wsh/api.py
++```
++
++The `etc/systemd/system` folder contains example service files for running these scripts as systemd services.
