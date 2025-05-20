@@ -1,16 +1,16 @@
 # Scales Project
 
-This repository contains Python scripts and service files for running the weight and laser measurement system.
+В этом репозитории содержатся Python-скрипты и файлы сервисов для работы системы измерения веса и лазерных замеров.
 
-## Installation
+## Установка
 
-Create a virtual environment (optional) and install dependencies from `requirements.txt`:
+Создайте виртуальное окружение (опционально) и установите зависимости из файла `requirements.txt`:
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-```
+
 
 ## Usage
 
