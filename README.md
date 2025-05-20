@@ -1,51 +1,75 @@
-## Deployment on Raspberry Pi 3
+# 🌟 Развертывание на Raspberry Pi 3
 
-This section provides a step-by-step guide for installing and running the project on a Raspberry Pi 3.
+Пошаговое руководство для установки и запуска проекта на Raspberry Pi 3.
 
-### 1. Prepare the system
-1. Update packages:
+---
+
+## 🛠 1. Подготовка системы
+
+1. **Обновление пакетов**  
+   Обновите систему:  
    ```bash
-   sudo apt update && sudo apt upgrade
+   sudo apt update && sudo apt upgrade -y
    ```
-2. Create a user `scales` with password `!QAZxsw2` (replace with your own if needed):
+
+2. **Создание пользователя**  
+   Создайте пользователя `scales` с паролем `!QAZxsw2`:  
    ```bash
    sudo adduser scales
-   sudo usermod -aG sudo scales   # optional
+   sudo usermod -aG sudo scales  # Добавить в sudo (опционально)
    ```
 
-### 2. Install Python dependencies
-1. Install Python and tools:
+---
+
+## 🐍 2. Установка Python
+
+1. **Установка инструментов**  
+   Установите Python 3 и зависимости:  
    ```bash
    sudo apt install python3 python3-venv python3-pip -y
    ```
-2. Create a virtual environment and install requirements:
+
+2. **Виртуальное окружение**  
+   Настройте и активируйте окружение:  
    ```bash
    python3 -m venv /home/scales/venv
    source /home/scales/venv/bin/activate
    pip install -r requirements.txt
    ```
 
-### 3. Place scripts and create log directory
-1. Copy scripts to `/usr/sbin/wsh` and set permissions:
+---
+
+## 📂 3. Размещение скриптов и логов
+
+1. **Копирование скриптов**  
+   Разместите скрипты в `/usr/sbin/wsh`:  
    ```bash
    sudo mkdir -p /usr/sbin/wsh
    sudo cp usr/sbin/wsh/*.py /usr/sbin/wsh/
    sudo chown -R scales:scales /usr/sbin/wsh
    sudo chmod 755 /usr/sbin/wsh/*.py
    ```
-2. Create a directory for logs:
+
+2. **Директория для логов**  
+   Создайте директорию для логов:  
    ```bash
    sudo mkdir -p /home/scales/logs
    sudo chown -R scales:scales /home/scales/logs
    ```
 
-### 4. Configure systemd services
-1. Copy unit files:
+---
+
+## ⚙️ 4. Настройка systemd
+
+1. **Копирование юнитов**  
+   Скопируйте файлы сервисов:  
    ```bash
    sudo cp etc/systemd/system/api_service.service /etc/systemd/system/
    sudo cp etc/systemd/system/weith_service.service /etc/systemd/system/
    ```
-2. Reload systemd and enable services:
+
+2. **Запуск сервисов**  
+   Активируйте и запустите сервисы:  
    ```bash
    sudo systemctl daemon-reload
    sudo systemctl enable api_service.service
@@ -54,54 +78,76 @@ This section provides a step-by-step guide for installing and running the projec
    sudo systemctl start weith_service.service
    ```
 
-### 5. Service management
-View logs in real time:
-```bash
-sudo journalctl -u api_service.service -f
-sudo journalctl -u weith_service.service -f
-```
-Start/stop or restart services:
-```bash
-sudo systemctl stop api_service.service
-sudo systemctl restart api_service.service
-sudo systemctl status api_service.service
+---
 
-sudo systemctl stop weith_service.service
-sudo systemctl restart weith_service.service
-sudo systemctl status weith_service.service
-```
+## 🔍 5. Управление сервисами
 
-### 6. Working with the API
-The API listens on port 5000 of the Raspberry Pi.
-Examples using `curl`:
+- **Просмотр логов**  
+   ```bash
+   sudo journalctl -u api_service.service -f
+   sudo journalctl -u weith_service.service -f
+   ```
+
+- **Управление сервисами**  
+   ```bash
+   sudo systemctl stop api_service.service
+   sudo systemctl restart api_service.service
+   sudo systemctl status api_service.service
+
+   sudo systemctl stop weith_service.service
+   sudo systemctl restart weith_service.service
+   sudo systemctl status weith_service.service
+   ```
+
+---
+
+## 🌐 6. API через `curl`
+
+API доступен на порту **5000**:  
 ```bash
-# Get current data
+# Получить данные
 curl http://<PI_IP>:5000/get_data
 
-# Request a new measurement
+# Новое измерение
 curl -X POST http://<PI_IP>:5000/make_measurement
 
-# Restart the measurement service
+# Перезапуск сервиса
 curl -X POST http://<PI_IP>:5000/restart_service
 ```
 
-### 7. Работа с API в PowerShell
+> Замените `<PI_IP>` на IP-адрес Raspberry Pi.
 
-API доступен на порту 5000 Raspberry Pi.
+---
 
-Примеры запросов с помощью PowerShell:
+## 🖥 7. API через PowerShell
 
+Используйте порт **5000** для запросов:  
 ```powershell
-# Получить текущие данные
+# Получить данные
 Invoke-RestMethod -Uri "http://<PI_IP>:5000/get_data"
 
-# Запросить новое измерение
+# Новое измерение
 Invoke-RestMethod -Method Post -Uri "http://<PI_IP>:5000/make_measurement"
 
-# Перезапустить сервис измерений
+# Перезапуск сервиса
 Invoke-RestMethod -Method Post -Uri "http://<PI_IP>:5000/restart_service"
 ```
 
-`weith.py` writes two rotating log files in `/home/scales/logs`:
-- `weith_service.log`
-- `weith_service_data.log`
+> Замените `<PI_IP>` на IP-адрес Raspberry Pi.
+
+---
+
+## 📜 8. Логирование
+
+Скрипт `weith.py` сохраняет логи в `/home/scales/logs`:  
+- `weith_service.log` — логи сервиса.  
+- `weith_service_data.log` — данные измерений.
+
+---
+
+## 💡 Советы
+
+- Убедитесь, что порт **5000** открыт в фаерволе.  
+- Проверяйте логи для диагностики.  
+- Используйте безопасный пароль для `scales`.  
+- Рассмотрите SSH-ключи для доступа.
