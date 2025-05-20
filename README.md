@@ -85,6 +85,23 @@ curl -X POST http://<PI_IP>:5000/make_measurement
 curl -X POST http://<PI_IP>:5000/restart_service
 ```
 
+### 7. Работа с API в PowerShell
+
+API доступен на порту 5000 Raspberry Pi.
+
+Примеры запросов с помощью PowerShell:
+
+```powershell
+# Получить текущие данные
+Invoke-RestMethod -Uri "http://<PI_IP>:5000/get_data"
+
+# Запросить новое измерение
+Invoke-RestMethod -Method Post -Uri "http://<PI_IP>:5000/make_measurement"
+
+# Перезапустить сервис измерений
+Invoke-RestMethod -Method Post -Uri "http://<PI_IP>:5000/restart_service"
+```
+
 `weith.py` writes two rotating log files in `/home/scales/logs`:
 - `weith_service.log`
 - `weith_service_data.log`
