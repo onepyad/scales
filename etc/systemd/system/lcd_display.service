@@ -1,0 +1,14 @@
+[Unit]
+Description=Отображение параметров взвешивания
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/sbin/wsh/lcd_display.py
+WorkingDirectory=/usr/local/bin
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
