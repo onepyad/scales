@@ -8,7 +8,8 @@ WorkingDirectory=/usr/local/bin
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
-User=root
+User=scales
+Group=scales
 
 [Install]
 WantedBy=multi-user.target
