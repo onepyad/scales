@@ -1,51 +1,33 @@
 import serial
 import time
 import logging
-from logging.handlers import TimedRotatingFileHandler
 import glob
 import requests
 from datetime import datetime
 import socket
 import os
 
-# Настройка кастомного уровня DATA
+# Кастомный уровень DATA для измерений (попадает в journalctl с тегом DATA)
 DATA_LEVEL = 25
 logging.addLevelName(DATA_LEVEL, "DATA")
 
-# Настройка логирования
 LOG_LEVEL = 1  # 1=DEBUG, 2=WARNING, 3=INFO, 4=DATA
 LEVEL_MAP = {1: logging.DEBUG, 2: logging.WARNING, 3: logging.INFO, 4: DATA_LEVEL}
 
-# Логгеры
 logger = logging.getLogger('weith_service')
 data_logger = logging.getLogger('weith_service.data')
 logger.setLevel(LEVEL_MAP.get(LOG_LEVEL, logging.DEBUG))
 data_logger.setLevel(DATA_LEVEL)
+# data_logger — отдельный логгер, чтобы не дублировать сообщения через root.
+data_logger.propagate = False
 
-# Обработчики
 console_handler = logging.StreamHandler()
-main_handler = TimedRotatingFileHandler('/home/scales/logs/weith_service.log', when='midnight', interval=1, backupCount=7)
-data_handler = TimedRotatingFileHandler('/home/scales/logs/weith_service_data.log', when='midnight', interval=1, backupCount=7)
-
-# Формат
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s')
-for handler in [console_handler, main_handler, data_handler]:
-    handler.setFormatter(formatter)
+console_handler.setFormatter(formatter)
 
-# Фильтр для DATA
-class DataFilter(logging.Filter):
-    def filter(self, record):
-        return record.levelno == DATA_LEVEL
-
-data_handler.addFilter(DataFilter())
-
-# Привязка обработчиков
 logger.addHandler(console_handler)
-logger.addHandler(main_handler)
 data_logger.addHandler(console_handler)
-data_logger.addHandler(data_handler)
 
-# Остальной код без изменений до main()
 def round_to_nearest_5(value):
     return round(value * 200) / 200
 

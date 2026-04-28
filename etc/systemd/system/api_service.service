@@ -3,8 +3,12 @@ Description=Flask API service on 5000 port
 After=network.target
 
 [Service]
+WorkingDirectory=/usr/sbin/wsh
 ExecStart=/home/scales/venv/bin/python /usr/sbin/wsh/api.py
 Restart=always
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
 User=scales
 Group=scales
 Environment=PYTHONUNBUFFERED=1

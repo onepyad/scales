@@ -3,8 +3,12 @@ Description=Сервис по взвешиванию и измерению ко�
 After=network.target
 
 [Service]
+WorkingDirectory=/usr/sbin/wsh
 ExecStart=/home/scales/venv/bin/python /usr/sbin/wsh/weith.py
 Restart=always
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
 User=scales
 Group=scales
 Environment=PYTHONUNBUFFERED=1
