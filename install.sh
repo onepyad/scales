@@ -7,8 +7,10 @@
 #   SCALES_HOME       — домашний каталог пользователя (default: /home/$SCALES_USER)
 #   SCALES_VENV       — путь к venv                   (default: $SCALES_HOME/venv)
 #   SCALES_BIN        — куда копируются скрипты       (default: /usr/sbin/wsh)
-#   SCALES_LOG_DIR    — каталог для логов             (default: $SCALES_HOME/logs)
 #   SCALES_SYSTEMD    — каталог systemd-юнитов        (default: /etc/systemd/system)
+#
+# Логи всех сервисов пишутся в системный journal — смотреть через
+# `journalctl -u <unit> -f`.
 
 set -euo pipefail
 
@@ -23,7 +25,6 @@ SCALES_USER="${SCALES_USER:-scales}"
 SCALES_HOME="${SCALES_HOME:-/home/${SCALES_USER}}"
 SCALES_VENV="${SCALES_VENV:-${SCALES_HOME}/venv}"
 SCALES_BIN="${SCALES_BIN:-/usr/sbin/wsh}"
-SCALES_LOG_DIR="${SCALES_LOG_DIR:-${SCALES_HOME}/logs}"
 SCALES_SYSTEMD="${SCALES_SYSTEMD:-/etc/systemd/system}"
 
 # Каталог исходников (там, где лежит этот install.sh)
@@ -36,7 +37,6 @@ echo "    user        = ${SCALES_USER}"
 echo "    home        = ${SCALES_HOME}"
 echo "    venv        = ${SCALES_VENV}"
 echo "    scripts dir = ${SCALES_BIN}"
-echo "    log dir     = ${SCALES_LOG_DIR}"
 echo "    systemd dir = ${SCALES_SYSTEMD}"
 echo "    src dir     = ${SRC_DIR}"
 echo
@@ -72,8 +72,7 @@ done
 # --- 3. Каталоги ------------------------------------------------------------
 
 echo "==> [3/6] Каталоги"
-mkdir -p "${SCALES_BIN}" "${SCALES_LOG_DIR}"
-chown -R "${SCALES_USER}:${SCALES_USER}" "${SCALES_LOG_DIR}"
+mkdir -p "${SCALES_BIN}"
 
 # --- 4. Скрипты -------------------------------------------------------------
 
@@ -131,5 +130,6 @@ done
 
 echo
 echo "==> Готово."
+echo "    Логи: journalctl -u <api_service|weith_service|lcd_display|key_service> -f"
 echo "    Если включали I2C впервые — может потребоваться перезагрузка."
 echo "    Проверка: curl http://127.0.0.1:5000/get_data"

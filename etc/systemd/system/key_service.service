@@ -3,8 +3,12 @@ Description=GPIO-кнопка → запуск скрипта измерения
 After=network.target
 
 [Service]
+WorkingDirectory=/usr/sbin/wsh
 ExecStart=/home/scales/venv/bin/python /usr/sbin/wsh/key_listener.py
 Restart=always
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
 User=scales
 Group=scales
 Environment=PYTHONUNBUFFERED=1

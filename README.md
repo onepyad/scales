@@ -38,10 +38,12 @@ sudo ./install.sh
 1. `apt install` системных пакетов: `python3`, `python3-venv`, `python3-pip`, `python3-smbus`, `i2c-tools`, `curl`.
 2. Включает I2C через `raspi-config nonint do_i2c 0`.
 3. Создаёт пользователя `scales` (без пароля; задайте `sudo passwd scales` при необходимости) и добавляет его в группы `gpio`, `i2c`, `dialout`.
-4. Создаёт каталоги `/usr/sbin/wsh` (скрипты) и `/home/scales/logs` (логи).
+4. Создаёт каталог `/usr/sbin/wsh` (скрипты).
 5. Копирует все Python-скрипты и `usbkey.sh` в `/usr/sbin/wsh` с правами `0755` от имени `scales`.
 6. Создаёт **один** venv в `/home/scales/venv` и ставит `requirements.txt`.
 7. Копирует все 4 systemd-юнита в `/etc/systemd/system`, делает `daemon-reload`, `enable` и `restart` каждого сервиса.
+
+Все 4 юнита имеют одинаковый [Service]-блок; их логи пишутся в `journalctl`.
 
 Скрипт идемпотентен — повторный запуск обновит установку.
 
@@ -55,7 +57,6 @@ sudo ./install.sh
 | `SCALES_HOME`    | `/home/$SCALES_USER`  | домашний каталог             |
 | `SCALES_VENV`    | `$SCALES_HOME/venv`   | путь к venv                  |
 | `SCALES_BIN`     | `/usr/sbin/wsh`       | куда копируются скрипты      |
-| `SCALES_LOG_DIR` | `$SCALES_HOME/logs`   | каталог для логов            |
 | `SCALES_SYSTEMD` | `/etc/systemd/system` | каталог systemd-юнитов       |
 
 Пример: установить в `/opt/scales`:
@@ -69,20 +70,14 @@ sudo SCALES_BIN=/opt/scales SCALES_VENV=/opt/scales/venv ./install.sh
 
 ## Управление сервисами
 
-Просмотр логов:
-```bash
-sudo journalctl -u api_service.service   -f
-sudo journalctl -u weith_service.service -f
-sudo journalctl -u lcd_display.service   -f
-sudo journalctl -u key_service.service   -f
-```
-
-Управление:
 ```bash
 sudo systemctl status   <unit>
 sudo systemctl restart  <unit>
 sudo systemctl stop     <unit>
 ```
+
+Юниты: `api_service`, `weith_service`, `lcd_display`, `key_service`.
+Логи — см. раздел [Логи](#логи) ниже.
 
 ---
 
@@ -108,12 +103,20 @@ Invoke-RestMethod -Method Post -Uri "http://<PI_IP>:5000/restart_service"
 
 ## Логи
 
-Пишутся в `/home/scales/logs`:
-- `weith_service.log` — основной лог сервиса измерений;
-- `weith_service_data.log` — измеренные значения;
-- `key_listener.log` — нажатия GPIO-кнопки.
+Все логи идут в системный journal:
+```bash
+sudo journalctl -u api_service.service   -f
+sudo journalctl -u weith_service.service -f
+sudo journalctl -u lcd_display.service   -f
+sudo journalctl -u key_service.service   -f
+```
 
-Сервисы дополнительно пишут в `journalctl`.
+Измеренные данные в `weith_service` идут с уровнем `DATA` — их можно фильтровать:
+```bash
+sudo journalctl -u weith_service.service -g "DATA"
+```
+
+Ротацией и хранением занимается `systemd-journald` (настройки — в `/etc/systemd/journald.conf`).
 
 ---
 
