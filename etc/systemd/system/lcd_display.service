@@ -3,13 +3,14 @@ Description=Отображение параметров взвешивания
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /usr/sbin/wsh/lcd_display.py
-WorkingDirectory=/usr/local/bin
-StandardOutput=inherit
-StandardError=inherit
+WorkingDirectory=/usr/sbin/wsh
+ExecStart=/usr/sbin/wsh/.venv/bin/python /usr/sbin/wsh/lcd_display.py
 Restart=always
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
 User=scales
-Group=scales
+Environment=PYTHONUNBUFFERED=1
 
 [Install]
 WantedBy=multi-user.target

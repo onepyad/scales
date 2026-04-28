@@ -1,0 +1,12 @@
+[Unit]
+Description=GPIO-кнопка → запуск скрипта измерения
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/sbin/wsh/key_listener.py
+Restart=always
+User=scales
+Group=scales
+
+[Install]
+WantedBy=multi-user.target
