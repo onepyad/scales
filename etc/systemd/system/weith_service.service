@@ -3,10 +3,11 @@ Description=Сервис по взвешиванию и измерению ко�
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /usr/sbin/wsh/weith.py
+ExecStart=/home/scales/venv/bin/python /usr/sbin/wsh/weith.py
 Restart=always
 User=scales
 Group=scales
+Environment=PYTHONUNBUFFERED=1
 
 [Install]
 WantedBy=multi-user.target
