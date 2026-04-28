@@ -4,12 +4,13 @@ After=network.target
 
 [Service]
 WorkingDirectory=/usr/sbin/wsh
-ExecStart=/usr/sbin/wsh/.venv/bin/python /usr/sbin/wsh/lcd_display.py
+ExecStart=/home/scales/venv/bin/python /usr/sbin/wsh/lcd_display.py
 Restart=always
 RestartSec=5s
 StandardOutput=journal
 StandardError=journal
 User=scales
+Group=scales
 Environment=PYTHONUNBUFFERED=1
 
 [Install]
